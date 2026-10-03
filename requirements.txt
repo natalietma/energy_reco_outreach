@@ -1,0 +1,6 @@
+tensorflow==2.15.1
+h5py>=3.10,<4
+numpy>=1.23.5,<2
+matplotlib>=3.7,<4
+jupyterlab>=4,<5
+
