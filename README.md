@@ -81,16 +81,185 @@ The CNN reduces the average error and the broad tails, but it is not uniformly b
 
 ## Run the tutorial
 
-Python 3.11 is recommended.
+You do not need a GPU for this tutorial. A normal laptop is enough.
+
+Enter the commands below **one line at a time** in Terminal on macOS/Linux or Anaconda Prompt on Windows.
+
+### Step 1: Download the repository
+
+Using Git:
 
 ```bash
-conda create -n energy-reco python=3.11
+git clone https://github.com/natalietma/neutrino-energy-reconstruction-tutorial.git
+cd neutrino-energy-reconstruction-tutorial
+```
+
+If you do not have Git, click **Code → Download ZIP** on this GitHub page, unzip the downloaded file, and open Terminal inside the extracted folder.
+
+### Step 2: Check that you are in the correct folder
+
+Run:
+
+```bash
+pwd
+ls
+```
+
+You should see files and folders similar to:
+
+```text
+README.md
+energy_reco.ipynb
+requirements.txt
+data/
+figures/
+models/
+```
+
+If you do not see `energy_reco.ipynb`, use `cd` to enter the correct project folder before continuing.
+
+### Step 3: Create a Python environment
+
+Python 3.11 is recommended.
+
+If you have Anaconda or Miniconda, run:
+
+```bash
+conda create -n energy-reco python=3.11 -y
 conda activate energy-reco
-pip install -r requirements.txt
+```
+
+Your terminal should now begin with something similar to:
+
+```text
+(energy-reco)
+```
+
+This means that the new environment is active.
+
+### Step 4: Install the required packages
+
+Run:
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+This installs TensorFlow, NumPy, Matplotlib, HDF5 support, and JupyterLab.
+
+The installation may take several minutes.
+
+### Step 5: Check the dataset
+
+Run:
+
+```bash
+python -c "import h5py; f=h5py.File('data/nue_energy_demo.h5','r'); print('Images:',f['images'].shape); print('True energy:',f['true_energy'].shape); f.close()"
+```
+
+The output should include:
+
+```text
+Images: (7373, 2, 100, 80)
+True energy: (7373,)
+```
+
+Each event contains two detector images with 100 × 80 pixels.
+
+### Step 6: Open the Jupyter notebook
+
+Run:
+
+```bash
 jupyter lab energy_reco.ipynb
 ```
 
-Training takes a few minutes on a modern laptop CPU. A GPU is optional.
+JupyterLab should open automatically in your web browser.
+
+If the browser does not open, copy the `http://localhost:...` URL displayed in Terminal and paste it into your browser.
+
+> Keep the Terminal window open while using JupyterLab.
+
+### Step 7: Run the tutorial
+
+In JupyterLab:
+
+1. Open `energy_reco.ipynb`.
+2. Select **Run → Run All Cells** from the top menu.
+3. If asked to choose a kernel, select **Python 3**.
+4. Wait while the CNN trains and evaluates the test events.
+
+A number such as `[5]` beside a cell means that the cell has finished running. An asterisk `[*]` means that the cell is still running.
+
+Training usually takes several minutes on a laptop CPU. A GPU is optional.
+
+### Step 8: Find the results
+
+After the notebook finishes:
+
+- the trained model is saved to `models/energy_cnn.keras`;
+- reconstruction figures are saved in `figures/`;
+- the final notebook cells print the CNN and traditional-reconstruction metrics.
+
+The main output figures include:
+
+```text
+figures/validation_loss_over_epochs.png
+figures/nue_energy_fractional_error.png
+figures/nue_energy_prediction_bias.png
+figures/nue_energy_resolution.png
+figures/predicted_vs_true.png
+figures/event_examples.png
+```
+
+### Step 9: Stop JupyterLab
+
+Return to Terminal and press:
+
+```text
+Control + C
+```
+
+Confirm shutdown if Terminal asks for permission.
+
+### Open the tutorial again later
+
+You do not need to reinstall the packages. Open Terminal and run:
+
+```bash
+cd neutrino-energy-reconstruction-tutorial
+conda activate energy-reco
+jupyter lab energy_reco.ipynb
+```
+
+### Common problems
+
+#### `conda: command not found`
+
+Install Anaconda or Miniconda, close Terminal, and open it again.
+
+#### `jupyter: command not found`
+
+Activate the environment and reinstall the requirements:
+
+```bash
+conda activate energy-reco
+python -m pip install -r requirements.txt
+```
+
+#### `FileNotFoundError: data/nue_energy_demo.h5`
+
+You are probably running Jupyter from the wrong folder. Stop Jupyter, enter the repository folder, and start it again:
+
+```bash
+cd neutrino-energy-reconstruction-tutorial
+jupyter lab energy_reco.ipynb
+```
+
+#### A notebook cell shows an error
+
+Select **Kernel → Restart Kernel and Run All Cells**. Run the notebook from the beginning because later cells depend on variables created by earlier cells.
 
 ## Questions to explore
 
